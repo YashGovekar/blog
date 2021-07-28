@@ -24,7 +24,7 @@ class PostFactory extends Factory
      */
     public function definition()
     {
-        $title = $this->faker->realText(20);
+        $title = $this->faker->realText(40);
 
         $excerpt = $this->faker->realText(50);
 

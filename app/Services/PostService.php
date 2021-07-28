@@ -33,7 +33,7 @@ class PostService
     {
         if (! $same_slug) {
             try {
-                $data['slug'] = $this->generateUniqueSlug($data['title']);
+                $data['slug'] = generate_slug($data['title']);
             } catch (Exception $e) {
                 flash('Something went wrong!')->error();
                 Log::error($e->getMessage());
@@ -161,36 +161,6 @@ class PostService
 
             return collect();
         }
-    }
-
-    public function generateUniqueSlug($string): ?string
-    {
-        $slug = generate_slug($string);
-
-        try {
-            $createSlugsAll = $this->postRepo
-                ->pushCriteria(new PostCriteria('slug', 'like', $slug.'%'))
-                ->all(['slug']);
-        } catch (RepositoryException $e) {
-            flash('Cannot generate slug!')->error();
-            Log::error($e->getMessage());
-
-            return  '';
-        }
-
-
-        if (! $createSlugsAll->contains('slug', $slug)){
-            return $slug;
-        }
-
-        for ($i = 1; $i <= 10; $i++) {
-            $makeSlug = $slug.'-'.$i;
-            if (! $createSlugsAll->contains('slug', $makeSlug)) {
-                return $makeSlug;
-            }
-        }
-
-        return null;
     }
 
     public function delete($id): bool
